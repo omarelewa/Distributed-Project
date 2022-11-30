@@ -1,21 +1,21 @@
 // use  std::sync::mpsc::Sender;
-use std::net::UdpSocket;
-use std::str;
+use std::net::UdpSocket; // import UdpSocket module from net module to create socket and address for receiver and sender
+use std::str; // import str module to allow for converting bytes to string
 
-pub struct RequestReceiver{ // struct to hold receiver info
-    addr: String, // local address
-    socket: UdpSocket, // socket to receive requests
+pub struct RequestReceiver{ // struct to hold receiver info 
+    addr: String, // local address 
+    socket: UdpSocket, // socket to receive requests 
 }
 
-impl RequestReceiver{ // impl RequestReceiver
-    pub fn new(addr: String) -> RequestReceiver { // constructor
-        RequestReceiver{ // return RequestReceiver
-            addr: addr.clone(), // set addr
+impl RequestReceiver{ // impl RequestReceiver to allow for creating RequestReceiver objects
+    pub fn new(addr: String) -> RequestReceiver { // constructor of RequestReceiver
+        RequestReceiver{ // return RequestReceiver struct 
+            addr: addr.clone(), // set addr 
             socket: UdpSocket::bind(addr).expect("couldn't bind sender to address"), // bind socket to addr
         } // return RequestReceiver
-    } // end constructor
+    } // end constructor 
 
-    pub fn listen(&self){ // listen function 
+    pub fn listen(&self){ // listen function to listen for requests from sender 
         println!("Listening on port {}", self.addr); // print listening message 
         loop{ 
                 let mut buf = [0; 1000]; // create buffer to hold message 
