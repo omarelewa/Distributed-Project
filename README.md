@@ -1,10 +1,10 @@
 # DistributedProject
 
-## Running Instructions
+## Running Instructions for Distributed Project
 
-### Servers
+### Servers 
 
-Open three terminal windows (one for each server) in the server folder and run
+Open three terminal windows (one for each server) in the server folder and run the following commands:
 
 - `cargo run 127.0.0.1:5656` in terminal 1
 - `cargo run 127.0.0.1:5657` in terminal 2
@@ -12,5 +12,6 @@ Open three terminal windows (one for each server) in the server folder and run
 
 ### Clients
 
-Open a new terminal in the clients folder and run
+Open a new terminal in the clients folder and run the following command:
+
 `cargo run 127.0.0.1:6656`
