@@ -1,5 +1,5 @@
 // use  std::sync::mpsc::Sender;
-use std::net::{UdpSocket};
+use std::net::UdpSocket;
 use std::str;
 
 pub struct RequestReceiver{ // struct to hold receiver info
