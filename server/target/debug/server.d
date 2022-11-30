@@ -1,0 +1,1 @@
+/Users/omar/Desktop/Distributed\ Project/DistributedProject/server/target/debug/server: /Users/omar/Desktop/Distributed\ Project/DistributedProject/server/src/main.rs /Users/omar/Desktop/Distributed\ Project/DistributedProject/server/src/receiver.rs
