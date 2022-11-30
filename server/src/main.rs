@@ -1,7 +1,7 @@
 
-mod receiver;
-use std::env;
-use receiver::RequestReceiver;
+mod receiver; // import receiver module from receiver.rs file 
+use std::env; // import env module from std library to allow for getting command line arguments
+use receiver::RequestReceiver; // import RequestReceiver from receiver module to allow for creating RequestReceiver objects 
 
 fn main() {
     let args: Vec<String> = env::args().collect(); // get server address from command line

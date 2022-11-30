@@ -1,5 +1,5 @@
 
-use std::fs::{File}; // import File module
+use std::fs::{File}; // import File module from fs library to allow for creating files 
 // use  std::sync::mpsc::Sender;
 use std::net::{UdpSocket, SocketAddr, SocketAddrV4}; // import UdpSocket, SocketAddr, and SocketAddrV4 modules from net module to create socket and address for receiver and sender 
 use std::thread::JoinHandle; // import JoinHandle module from thread module to allow for joining threads
