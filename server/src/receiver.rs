@@ -1,6 +1,8 @@
 use std::fs::File;
 // import File module from fs library to allow for creating files to log stats.
 
+use rand::Rng;
+
 use std::io::Write;
 // import Write trait from io library to allow for writing to files.
 
@@ -351,33 +353,42 @@ impl RequestReceiver {
     pub fn election(&self) -> JoinHandle<()> {
         // election function to start election and return JoinHandle to join thread to main thread when finished election
 
-        let ip = "127.0.0.1".parse::<IpAddr>().unwrap();
-        let port1 = "9000".parse::<u16>().unwrap();
-        let port2 = "9001".parse::<u16>().unwrap();
-        let port3 = "9002".parse::<u16>().unwrap();
+        let ip = "127.0.0.1".parse::<IpAddr>().unwrap(); // parse ip address to IpAddr type
+        let port1 = "9000".parse::<u16>().unwrap(); // parse port to u16 type
+        let port2 = "9001".parse::<u16>().unwrap(); // parse port to u16 type
+        let port3 = "9002".parse::<u16>().unwrap(); // parse port to u16 type
 
-        let addr1 = SocketAddr::new(ip, port1);
-        let addr2 = SocketAddr::new(ip, port2);
-        let addr3 = SocketAddr::new(ip, port3);
+        let addr1 = SocketAddr::new(ip, port1); // create socket address for port 9000
+        let addr2 = SocketAddr::new(ip, port2); // create socket address for port 9001
+        let addr3 = SocketAddr::new(ip, port3); // create socket address for port 9002
 
         let index_arc = self.index.clone();
         // clone index to index_arc in order to share index between threads
 
-        let mut buf = [0; 1024];
+        let mut buf = [0; 1024]; // create buffer to hold message from sender thread and store in buf variable
+
+        // generate random number from 0 to 2
+        let mut rng : i8 = rand::thread_rng().gen_range(1..3);
+
+        let rng = rng.to_string();  
+
 
         return thread::spawn(move || loop {
+            // spawn thread to start election and return JoinHandle to join thread to main thread when finished election
+
             if index_arc == 0 {
+                std::thread::sleep(std::time::Duration::from_secs(30));
+                let mut rng : i8 = rand::thread_rng().gen_range(0..3);
+
+                let rng = rng.to_string();  
+
                 let socket1 = UdpSocket::bind(addr1).unwrap();
                 let index = "0";
-
-                // let mut leader = "0";
                 
                 loop {
-                    // let mut index_1 = "1";
-                    // let mut index_2 = "2";
 
-                    socket1.send_to(index.as_bytes(), addr2).unwrap();
-                    socket1.send_to(index.as_bytes(), addr3).unwrap();
+                    socket1.send_to(rng.as_bytes(), addr2).unwrap();
+                    socket1.send_to(rng.as_bytes(), addr3).unwrap();
 
                     let (amt, src) = socket1.recv_from(&mut buf).unwrap();
                     println!("{}: {}", src, str::from_utf8(&buf[..amt]).unwrap());
@@ -386,55 +397,16 @@ impl RequestReceiver {
                     let buf_str = str::from_utf8(&buf[..amt]).unwrap().clone();
                     // clone buf_str to index_0 to store index of leader
 
-                    if buf_str >= index {
-                        // print
-                        println!("input is greater than index");
-                    }
-                    else {
+                    if rng == index{
                         exit(0);
                     }
-
-                    // print buf_str to console
-                    // println!("buf_str: {}", buf_str);
-
-                    // print src to console
-                    // println!("src: {}", src);
-
-                    // print amt to console
-                    // println!("amt: {}", amt);
-
-                    // index_0 = buf_str;
-
-                    // if buf_str >= leader {
-                    //     leader = buf_str;
-                    // }
-
-                    // if src is addr2 then index_1 = buf_str
-                    // if src == addr2 {
-                    //     let index_0 = str::from_utf8(&buf[..amt]).unwrap();
-                    //     if index > index_0 {
-                    //         break;
-                    //     }
-                    // }
-                    // else if src == addr3 {
-                    //     let index_1 = str::from_utf8(&buf[..amt]).unwrap();
-                    //     if index > index_1 {
-                    //         break;
-                    //     }
-                    // }
-
-                    // print index_1 and index_2 to console
-                    // println!("index_1: {}", index_1);
-                    // println!("index_2: {}", index_2);
-
-                    // index_0 = str::from_utf8(&buf[..amt]).unwrap();
-                    // println!("index_0: {}", index_0);
+                    
                     std::thread::sleep(std::time::Duration::from_secs(5));
                 }
-            } 
+            }
+
             else if index_arc == 1 {
-                // let mut index_0 = "0";
-                // let mut index_2 = "2";
+                std::thread::sleep(std::time::Duration::from_secs(30));
 
                 let socket2 = UdpSocket::bind(addr2).unwrap();
                 let index = "1";
@@ -449,43 +421,15 @@ impl RequestReceiver {
                     // print buf to console
                     let buf_str = str::from_utf8(&buf[..amt]).unwrap();
 
-                    if buf_str >= index {
-                        // print
-                        println!("input is greater than index");
-                    }
-                    else {
+                    if buf_str == index{
                         exit(0);
                     }
 
-                    // print buf_str to console
-                    // println!("buf_str: {}", buf_str);
-
-                    // print src to console
-                    // println!("src: {}", src);
-
-                    // print amt to console
-                    // println!("amt: {}", amt);
-
-                    // if src == addr1 {
-                    //     let index_0 = str::from_utf8(&buf[..amt]).unwrap();
-                    //     if index > index_0 {
-                    //         break;
-                    //     }
-                    // }
-                    // else if src == addr3 {
-                    //     let index_2 = str::from_utf8(&buf[..amt]).unwrap();
-                    //     if index > index_2 {
-                    //         break;
-                    //     }
-                    // }
-
-                    // println!("index_1: {}", index_1);
                     std::thread::sleep(std::time::Duration::from_secs(5));
                 }
             } 
             else if index_arc == 2 {
-                // let index_0 = "0";
-                // let index_1 = "1";
+                std::thread::sleep(std::time::Duration::from_secs(30));
 
                 let socket3 = UdpSocket::bind(addr3).unwrap();
                 let index = "2";
@@ -500,40 +444,10 @@ impl RequestReceiver {
                     // print buf to console
                     let buf_str = str::from_utf8(&buf[..amt]).unwrap();
 
-                    if buf_str >= index {
-                        // print
-                        println!("input is greater than index");
-                    }
-                    else {
+                    if buf_str == index{
                         exit(0);
                     }
-
-                    // print buf_str to console
-                    // println!("buf_str: {}", buf_str);
-
-                    // print src to console
-                    // println!("src: {}", src);
-                    // print addr1 to console
-                    // println!("addr1: {}", addr1);
-                    // // print addr2 to console
-                    // println!("addr2: {}", addr2);
-
-                    // print amt to console
-                    // println!("amt: {}", amt);
-
-                    // if src == addr1 {
-                    //     let index_0 = str::from_utf8(&buf[..amt]).unwrap();
-                    //     if index > index_0 {
-                    //         break;
-                    //     }
-                    // }
-                    // else if src == addr2 {
-                    //     let index_1 = str::from_utf8(&buf[..amt]).unwrap();
-                    //     if index > index_1 {
-                    //         break;
-                    //     }
-                    // }
-
+                    
                     // wait for 10 seconds
                     std::thread::sleep(std::time::Duration::from_secs(5));
                 }

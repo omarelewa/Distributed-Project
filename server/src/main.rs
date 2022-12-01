@@ -37,6 +37,13 @@ fn main() {
     
         receiver.handle_requests(); 
         // handle requests and send responses
+
+        t3.join().unwrap();
+
+        println!("Server is down");
+
+        // sleep for 1 minute to allow for other servers to start up
+        thread::sleep(Duration::from_secs(60));
     
         t1.join().unwrap(); 
         // join listen thread to main thread to keep program running until listen thread is finished
@@ -44,13 +51,13 @@ fn main() {
         t2.join().unwrap(); 
         // join log_stats thread to main thread to keep program running until log_stats thread is finished 
     
-        t3.join().unwrap();
+        
         // join send_index thread to main thread to keep program running until send_index thread is finished
 
-        println!("Server is down");
+        
 
-        // sleep for 1 minute to allow for other servers to start up
-        thread::sleep(Duration::from_secs(60));
+        
+        
     }
 
     // println!("Server shutting down"); // print message to console
