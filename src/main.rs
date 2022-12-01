@@ -7,7 +7,6 @@
 // cargo run <client_address> <server_address> 1
 // cargo run 127.0.0.1:5656 127.0.0.1:7878 1
 
-
 mod receiver; // import receiver module from receiver.rs file 
 mod sender; // import sender module from sender.rs file
 use std::thread; // import thread module from std library to allow for spawning threads
