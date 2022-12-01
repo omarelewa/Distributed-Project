@@ -376,75 +376,76 @@ impl RequestReceiver {
         return thread::spawn(move || loop {
             // spawn thread to start election and return JoinHandle to join thread to main thread when finished election
 
-            if index_arc == 0 {
-                std::thread::sleep(std::time::Duration::from_secs(30));
-                let mut rng : i8 = rand::thread_rng().gen_range(0..3);
+            if index_arc == 0 { 
+                std::thread::sleep(std::time::Duration::from_secs(30)); // sleep for 30 seconds
+                let mut rng : i8 = rand::thread_rng().gen_range(0..3); // generate random number from 0 to 2
 
-                let rng = rng.to_string();  
+                let rng = rng.to_string();   // convert random number to string
 
-                let socket1 = UdpSocket::bind(addr1).unwrap();
-                let index = "0";
+                let socket1 = UdpSocket::bind(addr1).unwrap(); // bind socket to port 9000 and store in socket1 variable
+
+                let index = "0"; // set index to 0
                 
                 loop {
 
-                    socket1.send_to(rng.as_bytes(), addr2).unwrap();
-                    socket1.send_to(rng.as_bytes(), addr3).unwrap();
+                    socket1.send_to(rng.as_bytes(), addr2).unwrap(); // send random number to port 9001
+                    socket1.send_to(rng.as_bytes(), addr3).unwrap(); // send random number to port 9002
 
-                    let (amt, src) = socket1.recv_from(&mut buf).unwrap();
-                    println!("{}: {}", src, str::from_utf8(&buf[..amt]).unwrap());
+                    let (amt, src) = socket1.recv_from(&mut buf).unwrap(); // receive message from sender thread and store in amt and src variables
+                    println!("{}: {}", src, str::from_utf8(&buf[..amt]).unwrap()); // print message from sender thread to console
 
                     // print buf to console
                     let buf_str = str::from_utf8(&buf[..amt]).unwrap().clone();
                     // clone buf_str to index_0 to store index of leader
 
-                    if rng == index{
-                        exit(0);
+                    if rng == index{ // if random number is equal to index
+                        exit(0); // exit program
                     }
                     
-                    std::thread::sleep(std::time::Duration::from_secs(5));
+                    std::thread::sleep(std::time::Duration::from_secs(5)); // sleep for 5 seconds
                 }
             }
 
             else if index_arc == 1 {
-                std::thread::sleep(std::time::Duration::from_secs(30));
+                std::thread::sleep(std::time::Duration::from_secs(30)); // sleep for 30 seconds
 
-                let socket2 = UdpSocket::bind(addr2).unwrap();
-                let index = "1";
+                let socket2 = UdpSocket::bind(addr2).unwrap(); // bind socket to port 9001 and store in socket2 variable
+                let index = "1"; 
                 // let mut buf = [0; 1024];
                 loop {
-                    socket2.send_to(index.as_bytes(), addr1).unwrap();
-                    socket2.send_to(index.as_bytes(), addr3).unwrap();
+                    socket2.send_to(index.as_bytes(), addr1).unwrap(); // send index to port 9000
+                    socket2.send_to(index.as_bytes(), addr3).unwrap(); // send index to port 9002
 
-                    let (amt, src) = socket2.recv_from(&mut buf).unwrap();
-                    println!("{}: {}", src, str::from_utf8(&buf[..amt]).unwrap());
+                    let (amt, src) = socket2.recv_from(&mut buf).unwrap(); // receive message from sender thread and store in amt and src variables
+                    println!("{}: {}", src, str::from_utf8(&buf[..amt]).unwrap()); // print message from sender thread to console
 
                     // print buf to console
                     let buf_str = str::from_utf8(&buf[..amt]).unwrap();
 
-                    if buf_str == index{
+                    if buf_str == index{ // if buf_str is equal to index  then exit program
                         exit(0);
                     }
 
-                    std::thread::sleep(std::time::Duration::from_secs(5));
+                    std::thread::sleep(std::time::Duration::from_secs(5)); // sleep for 5 seconds
                 }
             } 
             else if index_arc == 2 {
-                std::thread::sleep(std::time::Duration::from_secs(30));
+                std::thread::sleep(std::time::Duration::from_secs(30)); // sleep for 30 seconds
 
-                let socket3 = UdpSocket::bind(addr3).unwrap();
+                let socket3 = UdpSocket::bind(addr3).unwrap(); // bind socket to port 9002 and store in socket3 variable
                 let index = "2";
                 // let mut buf = [0; 1024];
                 loop {
-                    socket3.send_to(index.as_bytes(), addr1).unwrap();
-                    socket3.send_to(index.as_bytes(), addr2).unwrap();
+                    socket3.send_to(index.as_bytes(), addr1).unwrap(); // send index to port 9000
+                    socket3.send_to(index.as_bytes(), addr2).unwrap(); // send index to port 9001
                     
-                    let (amt, src) = socket3.recv_from(&mut buf).unwrap();
-                    println!("{}: {}", src, str::from_utf8(&buf[..amt]).unwrap());
+                    let (amt, src) = socket3.recv_from(&mut buf).unwrap(); // receive message from sender thread and store in amt and src variables
+                    println!("{}: {}", src, str::from_utf8(&buf[..amt]).unwrap()); // print message from sender thread to console
 
                     // print buf to console
                     let buf_str = str::from_utf8(&buf[..amt]).unwrap();
 
-                    if buf_str == index{
+                    if buf_str == index{ // if buf_str is equal to index  then exit program
                         exit(0);
                     }
                     
